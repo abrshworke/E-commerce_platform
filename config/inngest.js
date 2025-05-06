@@ -8,6 +8,7 @@ export const inngest = new Inngest({ id: "cart-next" });
 
 
 
+
 export const syncUserCreation = inngest.createFunction(
     { id: "create-user-from-clerk" },
     { event: "clerk/user.created" },
@@ -16,14 +17,18 @@ export const syncUserCreation = inngest.createFunction(
       const Userdata = {
         _id: id,
         email: email_addresses[0].email_address,
-        name: first_name + " " + last_name,
-        image_Url: image_url,
+        name: `${first_name} ${last_name}`,
+        image_Url: image_url,  // ✅ must match schema
       };
+      console.log("User created!")
       await ConnectDB();
       await User.create(Userdata);
     }
   );
   
+  
+
+
   export const syncUserUpdation = inngest.createFunction(
     { id: "update-user-from-clerk" },
     { event: "clerk/user.updated" },
@@ -38,6 +43,8 @@ export const syncUserCreation = inngest.createFunction(
       await User.findByIdAndUpdate(id, Userdata);
     }
   );
+  
+
   
   export const syncUserDeletion = inngest.createFunction(
     { id: "delete-user-with-clerk" },
